@@ -44,6 +44,10 @@
 				"index" : "org",
 				"key" : "organisationId"
 	},
+	"location" :{
+		"index" : "location",
+		"key" : "id"
+	},
 	"address": {
         "types": {
             "usr": {
