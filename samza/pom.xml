@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.sunbird</groupId>
+        <artifactId>lms.jobs</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <samza.version>0.14.1</samza.version>
+        <scala.version>2.11</scala.version>
+        <hadoop.version>2.6.2</hadoop.version>
+        <kafka.version>1.1.0</kafka.version>
+    </properties>
+
+    <groupId>org.sunbird.lms.jobs</groupId>
+    <artifactId>samza</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Sunbird Platform Samza Jobs</name>
+    <description>This project contains all the backend jobs of Sunbird Platform.</description>
+
+    <modules>
+        <module>indexer</module>
+    </modules>
+
+</project>
