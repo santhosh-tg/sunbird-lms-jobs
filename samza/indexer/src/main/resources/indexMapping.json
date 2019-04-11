@@ -5,13 +5,13 @@
 				"visibilityEnabled": true
 	},
 	"user_education" : {
-				"index" : "user"
-				"key"	: "userId",
+				"index" : "user",
+				"key"	: "userId"
 
 	},
 	"user_job_profile": {
 				"index" : "user",
-				"key" :"userId",
+				"key" :"userId"
 
 	},
 	"user_org" : {
@@ -26,7 +26,7 @@
 	"user_skills" :{
 				"index": "user",
 				"key"	: "userId"
-	}
+	},
 	"user_courses" : {
 				"index" : "user",
 				"key"	: "userId"
@@ -43,7 +43,7 @@
 	"org_external_identity" :{
 				"index" : "org",
 				"key" : "organisationId"
-	}
+	},
 	"address": {
         "types": {
             "usr": {
@@ -68,8 +68,8 @@
                 "index": "org",
                 "path": "address",
                 "key": "orgid" 
-            },
+            }
         }
-    },
+    }
 
 }
