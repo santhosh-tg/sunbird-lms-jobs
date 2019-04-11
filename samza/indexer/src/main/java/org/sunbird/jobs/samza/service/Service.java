@@ -62,8 +62,8 @@ public class Service {
 
   }
 
-  public void process(String messageString) {
-    Message message = messageCreator.getMessage(messageString);
+  public void process(Map<String, Object> messageMap) {
+    Message message = messageCreator.getMessage(messageMap);
     Map<String, String> esTypesToUpdate = getEsTypeToUpdate(message);
     updateToEs(esTypesToUpdate, message);
   }

@@ -8,33 +8,27 @@ import java.util.Set;
 import org.sunbird.common.models.util.CassandraPropertyReader;
 import org.sunbird.common.models.util.JsonKey;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MessageCreator {
   private static final CassandraPropertyReader propertiesCache =
       CassandraPropertyReader.getInstance();
-  private static ObjectMapper mapper = new ObjectMapper();
 
   @SuppressWarnings("unchecked")
-  public Message getMessage(String messageString) {
+  public Message getMessage(Map<String,Object> res) {
 
     Message message = new Message();
-    JsonNode res = null;
-    try {
-      res = mapper.readTree(messageString);
-    } catch (IOException e) {
-      System.out.println("error while reading message :" + messageString);
-      e.printStackTrace();
-    }
-    message.setEts(res.get(Constants.ETS).asLong());
-    message.setEventType(res.get(Constants.EVENT_TYPE).asText());
-    message.setIdentifier(res.get(Constants.IDENTIFIER));
-    message.setOperationType(res.get(Constants.OPERATION_TYPE).asText());
-    message.setProperties(getSimpleProperties((Map<String, Object>) mapper.convertValue(res.get(Constants.EVENT), Map.class).get(Constants.PROPERTIES)));
-    message.setObjectType(res.get(Constants.OBJECT_TYPE).asText());
-    message.setUserId(res.get(JsonKey.USER_ID).asText());
-    message.setCreatedOn(res.get(Constants.CREATED_ON).asText());
+    
+    message.setEts((Long)res.get(Constants.ETS));
+    message.setEventType((String)res.get(Constants.EVENT_TYPE));
+    message.setIdentifier((String)res.get(Constants.IDENTIFIER));
+    message.setOperationType((String)res.get(Constants.OPERATION_TYPE));
+    Map<String,Object> event = (Map<String, Object>)res.get(Constants.EVENT);
+    Map<String,Object> props = (Map<String, Object>)event.get(Constants.PROPERTIES);
+    message.setProperties(getSimpleProperties(props));
+   
+    message.setObjectType((String)res.get(Constants.OBJECT_TYPE));
+    message.setUserId((String)res.get(JsonKey.USER_ID));
+    message.setCreatedOn((String)res.get(Constants.CREATED_ON));
     return message;
   }
   
