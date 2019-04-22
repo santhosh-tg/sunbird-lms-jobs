@@ -33,4 +33,12 @@ public final class Constants {
   public static final String USER_ORG = "user_org";
   public static final String USER_BADGE_ASSERTION = "user_badge_assertion";
   public static final String USER_SKILLS = "user_skills";
+  public static final String INDEXER_MAPPING_PROPERTIES_PATH = "indexer_mapping_properties_path";
+  public static final String INDEXER_TABLE_PROPERTIES_PATH = "indexer_mapping_properties_path";
+  public static final String KEY = "key";
+  public static final String INDEX = "index";
+  public static final String DOT = ".";
+  public static final String IS_HARD_DELETE = "isHardDelete";
+  public static final String _DOC = "_doc";
+  
 }
