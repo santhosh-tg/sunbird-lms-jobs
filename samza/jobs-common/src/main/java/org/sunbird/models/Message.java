@@ -2,10 +2,6 @@ package org.sunbird.models;
 
 import java.util.Map;
 
-/**
- * @author iostream04
- *
- */
 public class Message {
 
   private String objectType;

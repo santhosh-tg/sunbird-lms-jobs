@@ -12,11 +12,11 @@ import org.apache.samza.task.TaskContext;
 import org.apache.samza.task.TaskCoordinator;
 import org.sunbird.common.models.util.LoggerEnum;
 import org.sunbird.common.models.util.ProjectLogger;
-import org.sunbird.jobs.samza.service.Service;
+import org.sunbird.jobs.samza.service.IndexerService;
 
 public class IndexerTask implements StreamTask, InitableTask {
 
-  private static Service service = new Service();
+  private static IndexerService service = new IndexerService();
 
   @Override
   public void process(IncomingMessageEnvelope envelope, MessageCollector collector, TaskCoordinator coordinator)

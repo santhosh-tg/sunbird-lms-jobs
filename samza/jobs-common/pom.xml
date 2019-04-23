@@ -8,12 +8,12 @@
 		<maven>3.0.1</maven>
 	</prerequisites>
 	<parent>
-	        <groupId>org.sunbird.lms.jobs</groupId>
-       	 <artifactId>samza</artifactId>
-       	 <version>1.0-SNAPSHOT</version>
-    </parent>
+		<groupId>org.sunbird.lms.jobs</groupId>
+		<artifactId>samza</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
 
-   	 <groupId>org.sunbird.lms.jobs</groupId>
+	<groupId>org.sunbird.lms.jobs</groupId>
 	<artifactId>jobs-common</artifactId>
 	<version>0.0.1</version>
 	<packaging>jar</packaging>
@@ -48,6 +48,12 @@
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
