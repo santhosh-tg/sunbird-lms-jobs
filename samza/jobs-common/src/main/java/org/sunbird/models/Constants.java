@@ -19,6 +19,6 @@ public final class Constants {
   public static final String KEY = "key";
   public static final String INDEX = "index";
   public static final String DOT = ".";
-  public static final String Transactional = "transactional";
+  public static final String TRANSACTIONAL = "transactional";
 
 }

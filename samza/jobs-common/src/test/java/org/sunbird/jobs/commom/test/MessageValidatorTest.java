@@ -99,7 +99,7 @@ public class MessageValidatorTest {
     Map<String, Object> messageMap = new HashMap<>();
     messageMap.put(Constants.IDENTIFIER, "123456");
     messageMap.put(Constants.OPERATION_TYPE, Constants.UPSERT);
-    messageMap.put(Constants.EVENT_TYPE, Constants.Transactional);
+    messageMap.put(Constants.EVENT_TYPE, Constants.TRANSACTIONAL);
     messageMap.put(Constants.OBJECT_TYPE, Constants.LOCATION);
     Map<String, Object> event = new HashMap<>();
     Map<String, Object> properties = new HashMap<>();
