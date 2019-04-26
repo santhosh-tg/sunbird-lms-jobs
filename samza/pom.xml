@@ -27,7 +27,8 @@
     <description>This project contains all the backend jobs of Sunbird Platform.</description>
 
     <modules>
-        <module>indexer</module>
+	<module>jobs-common</module>
+	<module>indexer</module>
     </modules>
 
 </project>
