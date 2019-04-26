@@ -22,7 +22,7 @@ public class IndexerTask implements StreamTask, InitableTask {
   public void process(IncomingMessageEnvelope envelope, MessageCollector collector, TaskCoordinator coordinator)
       throws Exception {
     Map<String, Object> event = getMessage(envelope);
-    ProjectLogger.log("event = " + event, LoggerEnum.INFO);
+    ProjectLogger.log("IndexerTask:process: event = " + event, LoggerEnum.INFO);
     service.process(event);
   }
 
@@ -40,6 +40,6 @@ public class IndexerTask implements StreamTask, InitableTask {
 
   @Override
   public void init(Config config, TaskContext taskContext) throws Exception {
-    ProjectLogger.log("Config values = " + config.toString(), LoggerEnum.INFO);
+    ProjectLogger.log("IndexerTask:init: config = " + config.toString(), LoggerEnum.INFO);
   }
 }
