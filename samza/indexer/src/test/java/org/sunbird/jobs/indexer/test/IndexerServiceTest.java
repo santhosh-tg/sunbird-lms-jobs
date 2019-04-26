@@ -28,12 +28,12 @@ public class IndexerServiceTest {
   @Before
   public void beforeEachTest() {
     PowerMockito.mockStatic(ElasticSearchUtil.class);
-
   }
 
   @Test
-  public void testMessageProcessSuccessForUpsert() {
+  public void testProcessSuccessForUpsert() {
     Map<String, Object> messageMap = createMessageMap();
+
     IndexerService service = new IndexerService();
     ProjectCommonException error = null;
 
@@ -42,57 +42,65 @@ public class IndexerServiceTest {
     } catch (ProjectCommonException e) {
       error = e;
     }
+
     Assert.assertTrue(error == null);
   }
 
   @Test
-  public void testMessageProcessSuccessForDelete() {
+  public void testProcessSuccessForDelete() {
     Map<String, Object> messageMap = createMessageMap();
     messageMap.put(Constants.OPERATION_TYPE, Constants.DELETE);
+
     IndexerService service = new IndexerService();
     ProjectCommonException error = null;
+
     try {
       service.process(messageMap);
     } catch (ProjectCommonException e) {
       error = e;
     }
-    Assert.assertTrue(error == null);
 
+    Assert.assertTrue(error == null);
   }
 
   @SuppressWarnings("unchecked")
   @Test
-  public void testMessageProcessFailureForUpsert() {
+  public void testProcessFailureForUpsert() {
     when(ElasticSearchUtil.upsertData(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
         .thenThrow(throwException());
+
     Map<String, Object> messageMap = createMessageMap();
+
     IndexerService service = new IndexerService();
     ProjectCommonException error = null;
+
     try {
       service.process(messageMap);
     } catch (ProjectCommonException e) {
       error = e;
     }
-    Assert.assertTrue(error != null);
 
+    Assert.assertTrue(error != null);
   }
 
   @Test
-  public void testMessageProcessFailureForDelete() {
+  public void testProcessFailureForDelete() {
     when(ElasticSearchUtil.removeData(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenThrow(throwException());
 
     Map<String, Object> messageMap = createMessageMap();
     messageMap.put(Constants.OPERATION_TYPE, Constants.DELETE);
+
     IndexerService service = new IndexerService();
     ProjectCommonException error = null;
+
     try {
       service.process(messageMap);
     } catch (ProjectCommonException e) {
       error = e;
     }
-    Assert.assertTrue(error != null);
 
+    Assert.assertTrue(error != null);
   }
 
   private Map<String, Object> createMessageMap() {
@@ -101,10 +109,12 @@ public class IndexerServiceTest {
     messageMap.put(Constants.OPERATION_TYPE, Constants.UPSERT);
     messageMap.put(Constants.EVENT_TYPE, Constants.TRANSACTIONAL);
     messageMap.put(Constants.OBJECT_TYPE, Constants.LOCATION);
+
     Map<String, Object> event = new HashMap<>();
     Map<String, Object> properties = new HashMap<>();
     Map<String, Object> name = new HashMap<>();
     Map<String, Object> id = new HashMap<>();
+
     name.put(Constants.NV, "BLR");
     id.put(Constants.NV, "0001");
     properties.put("name", name);
@@ -114,11 +124,11 @@ public class IndexerServiceTest {
     messageMap.put(Constants.ETS, 123456L);
     messageMap.put(Constants.USER_ID, "ANONYMOUS");
     messageMap.put(Constants.CREATED_ON, "1556018741532");
+
     return messageMap;
   }
 
   private ProjectCommonException throwException() {
     return new ProjectCommonException("", "", 0);
-
   }
 }
