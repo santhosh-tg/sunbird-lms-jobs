@@ -17,7 +17,7 @@
 	<artifactId>jobs-common</artifactId>
 	<version>0.0.1</version>
 	<packaging>jar</packaging>
-	<name>Common Utilities for jobs</name>
+	<name>Common Utils</name>
 	<dependencies>
 		<dependency>
 			<groupId>org.sunbird</groupId>
