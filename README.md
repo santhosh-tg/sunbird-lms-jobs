@@ -1,12 +1,6 @@
 # sunbird-lms-jobs
-Repository for background jobs in Sunbird LMS.
+This repository is for event driven jobs user in Sunbird LMS.
 
-This repository is used for running background and other jobs for learning management service.  
-
-For setup instruction, follow setup.md
-
+For setup instruction, you can refer setup.md.
 
 The code in this repository is licensed under MIT License unless otherwise noted. Please see the LICENSE file for details.
-
-
-
