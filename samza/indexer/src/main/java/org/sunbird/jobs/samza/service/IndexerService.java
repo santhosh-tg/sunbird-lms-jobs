@@ -32,35 +32,35 @@ public class IndexerService {
     messageValidator = new MessageValidator();
     config = ConfigFactory.parseResources(confFile);
     initProps();
-    ProjectLogger.log("Service : intialized", LoggerEnum.INFO);
+    ProjectLogger.log("IndexerService is intialised", LoggerEnum.INFO);
   }
 
   private void initProps() {
     properties = new HashMap<>();
-    Set<Entry<String, ConfigValue>> confs = config.entrySet();
-    for (Entry<String, ConfigValue> conf : confs) {
-      properties.put(conf.getKey(), conf.getValue().unwrapped().toString());
+    Set<Entry<String, ConfigValue>> configSet = config.entrySet();
+    for (Entry<String, ConfigValue> confEntry : configSet) {
+      properties.put(confEntry.getKey(), confEntry.getValue().unwrapped().toString());
     }
   }
 
   public void process(Map<String, Object> messageMap) {
     messageValidator.validateMessage(messageMap);
-    Message message = messageCreator.getMessage(messageMap);
-    String objectType = message.getObjectType();
-    updateToEs(getIndex(objectType), getKey(objectType), message);
 
+    Message message = messageCreator.getMessage(messageMap);
+
+    String objectType = message.getObjectType();
+    updateES(getIndex(objectType), getKey(objectType), message);
   }
 
-  private void updateToEs(String type, String key, Message message) {
-
+  private void updateES(String type, String key, Message message) {
     Map<String, Object> properties = prepareData(message, type);
     if (!Constants.DELETE.equals(message.getOperationType())) {
       String identifier = (String) properties.get(key);
-      ProjectLogger.log("Service: updateToEs : upserting data with identifier = " + identifier, LoggerEnum.INFO);
+      ProjectLogger.log("IndexerService:updateES: Upsert data for identifier = " + identifier, LoggerEnum.INFO);
       ElasticSearchUtil.upsertData(INDEX, type, identifier, properties);
     } else {
       String identifier = (String) properties.get(key);
-      ProjectLogger.log("Service: updateToEs : removing data with identifier = " + identifier, LoggerEnum.INFO);
+      ProjectLogger.log("IndexerService:updateES: Remove data for identifier = " + identifier, LoggerEnum.INFO);
       ElasticSearchUtil.removeData(INDEX, type, identifier);
     }
   }
@@ -86,5 +86,4 @@ public class IndexerService {
     }
     return null;
   }
-
 }
