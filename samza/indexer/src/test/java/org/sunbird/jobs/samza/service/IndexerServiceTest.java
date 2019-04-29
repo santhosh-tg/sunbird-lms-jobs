@@ -1,4 +1,4 @@
-package org.sunbird.jobs.indexer.test;
+package org.sunbird.jobs.samza.service;
 
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -21,7 +21,7 @@ import org.sunbird.jobs.samza.service.IndexerService;
 import org.sunbird.models.Constants;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ IndexerService.class, ElasticSearchUtil.class, })
+@PrepareForTest({ ElasticSearchUtil.class, })
 @PowerMockIgnore({ "javax.management.*" })
 public class IndexerServiceTest {
 
@@ -33,6 +33,21 @@ public class IndexerServiceTest {
   @Test
   public void testProcessSuccessForUpsert() {
     Map<String, Object> messageMap = createMessageMap();
+
+    IndexerService service = new IndexerService();
+    ProjectCommonException error = null;
+
+    try {
+      service.process(messageMap);
+    } catch (ProjectCommonException e) {
+      error = e;
+    }
+
+    Assert.assertTrue(error == null);
+  }
+  @Test
+  public void testProcessSuccessForUpsertOrg() {
+    Map<String, Object> messageMap = createMessageMapForOrg(createMessageMap());
 
     IndexerService service = new IndexerService();
     ProjectCommonException error = null;
@@ -128,6 +143,22 @@ public class IndexerServiceTest {
     return messageMap;
   }
 
+  private Map<String, Object> createMessageMapForOrg(Map<String, Object> messageMap) {
+    messageMap.put(Constants.OBJECT_TYPE, Constants.ORGANISATION);
+    Map<String, Object> event = new HashMap<>();
+    Map<String, Object> properties = new HashMap<>();
+    Map<String, Object> name = new HashMap<>();
+    Map<String, Object> id = new HashMap<>();
+    name.put(Constants.NV, "BLR-org");
+    id.put(Constants.NV, "0001");
+    properties.put("orgName", name);
+    properties.put("id", id);
+    properties.put("contactDetail", null);
+    event.put("properties", properties);
+    messageMap.put(Constants.EVENT, event);
+    return messageMap;
+  }
+  
   private ProjectCommonException throwException() {
     return new ProjectCommonException("", "", 0);
   }

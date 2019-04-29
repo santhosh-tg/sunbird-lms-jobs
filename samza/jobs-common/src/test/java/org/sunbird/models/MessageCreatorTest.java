@@ -1,4 +1,4 @@
-package org.sunbird.jobs.commom.test;
+package org.sunbird.models;
 
 import java.util.HashMap;
 import java.util.Map;
