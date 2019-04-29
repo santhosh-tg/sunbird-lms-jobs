@@ -1,4 +1,9 @@
 *.iml
+samza/indexer/target/
+samza/jobs-common/target/
 .idea/
 .project
 /target/
+samza/deploy
+.classpath
+.settings
