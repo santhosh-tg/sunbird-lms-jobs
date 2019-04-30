@@ -1,9 +1,7 @@
 *.iml
-samza/indexer/target/
-samza/jobs-common/target/
+**/target/**
 .idea/
 .project
-/target/
 samza/deploy
 .classpath
 .settings
