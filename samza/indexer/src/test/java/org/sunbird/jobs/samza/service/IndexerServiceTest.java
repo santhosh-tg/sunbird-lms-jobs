@@ -45,8 +45,29 @@ public class IndexerServiceTest {
 
     Assert.assertTrue(error == null);
   }
+
+  @SuppressWarnings("unchecked")
   @Test
-  public void testProcessSuccessForUpsertOrg() {
+  public void testProcessFailureForUpsert() {
+    when(ElasticSearchUtil.upsertData(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        .thenThrow(throwException());
+
+    Map<String, Object> messageMap = createMessageMap();
+
+    IndexerService service = new IndexerService();
+    ProjectCommonException error = null;
+
+    try {
+      service.process(messageMap);
+    } catch (ProjectCommonException e) {
+      error = e;
+    }
+
+    Assert.assertTrue(error != null);
+  }
+
+  @Test
+  public void testProcessSuccessForOrgUpsert() {
     Map<String, Object> messageMap = createMessageMapForOrg(createMessageMap());
 
     IndexerService service = new IndexerService();
@@ -76,26 +97,6 @@ public class IndexerServiceTest {
     }
 
     Assert.assertTrue(error == null);
-  }
-
-  @SuppressWarnings("unchecked")
-  @Test
-  public void testProcessFailureForUpsert() {
-    when(ElasticSearchUtil.upsertData(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
-        .thenThrow(throwException());
-
-    Map<String, Object> messageMap = createMessageMap();
-
-    IndexerService service = new IndexerService();
-    ProjectCommonException error = null;
-
-    try {
-      service.process(messageMap);
-    } catch (ProjectCommonException e) {
-      error = e;
-    }
-
-    Assert.assertTrue(error != null);
   }
 
   @Test
