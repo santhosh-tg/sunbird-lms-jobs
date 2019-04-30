@@ -84,7 +84,6 @@ public class IndexerService {
 
   @SuppressWarnings("unchecked")
   private Map<String, Object> prepareOrgData(Map<String, Object> map) {
-
     String contactDetails = (String) map.get(JsonKey.CONTACT_DETAILS);
     if (StringUtils.isNotBlank(contactDetails)) {
       Object[] arr;
