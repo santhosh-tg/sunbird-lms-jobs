@@ -8,6 +8,7 @@ import org.apache.samza.config.Config;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.responsecode.ResponseCode;
 import org.sunbird.jobs.samza.util.JobLogger;
+import org.sunbird.jobs.samza.util.JSONUtils;
 import org.sunbird.jobs.samza.util.SSOAccountUpdaterParams;
 
 import okhttp3.OkHttpClient;
@@ -31,7 +32,7 @@ public class SSOAccountUpdaterService {
     private Gson gson = new Gson();
 
     public void initialize(Config config) throws Exception {
-        //JSONUtils.loadProperties(config);
+        JSONUtils.loadProperties(config);
         appConfig = config;
         Logger.info("SSOAccountUpdaterService:initialize: Service config initialized");
     }
@@ -128,10 +129,9 @@ public class SSOAccountUpdaterService {
         Map<String, Object> orgSearchRequest = new HashMap<>();
         orgSearchRequest.put(SSOAccountUpdaterParams.request.name(), requestMap);
 
-        Logger.info("Firing getOrg request:"+gson.toJson(orgSearchRequest));
         RequestBody body = RequestBody.create(jsonMediaType, gson.toJson(orgSearchRequest));
         Request request = new Request.Builder()
-                .url(appConfig.get(SSOAccountUpdaterParams.lms_host.name() + appConfig.get(SSOAccountUpdaterParams.org_search_api.name())))
+                .url(appConfig.get(SSOAccountUpdaterParams.lms_host.name()) + appConfig.get(SSOAccountUpdaterParams.org_search_api.name()))
                 .post(body)
                 .addHeader(HttpHeaders.ACCEPT, javax.ws.rs.core.MediaType.APPLICATION_JSON)
                 .addHeader(HttpHeaders.CONTENT_TYPE, javax.ws.rs.core.MediaType.APPLICATION_JSON)
@@ -146,7 +146,8 @@ public class SSOAccountUpdaterService {
             Map<String, Object> orgSearchResponse = gson.fromJson(responseJson, Map.class);
             Map<String, Object> resultMap = (Map<String, Object>) orgSearchResponse.get(SSOAccountUpdaterParams.result.name());
             Map<String, Object> responseMap = (Map<String, Object>) resultMap.get(SSOAccountUpdaterParams.response.name());
-            int count = (int) responseMap.get(SSOAccountUpdaterParams.count.name());
+            Double dCount = (Double) responseMap.get(SSOAccountUpdaterParams.count.name());
+            int count = dCount.intValue();
             if (0 != count) {
                 List<Map<String, Object>> orgs = (List<Map<String, Object>>) responseMap.get(SSOAccountUpdaterParams.content.name());
                 return orgs.get(0);
@@ -159,11 +160,10 @@ public class SSOAccountUpdaterService {
 
     private boolean updateUser(Map<String, Object> updateUserRequest) throws Exception {
 
-        Logger.info("Firing updateUser request:"+gson.toJson(updateUserRequest));
         RequestBody body = RequestBody.create(jsonMediaType, gson.toJson(updateUserRequest));
         Request request = new Request.Builder()
-                .url(appConfig.get(SSOAccountUpdaterParams.lms_host.name() + appConfig.get(SSOAccountUpdaterParams.user_update_private_api.name())))
-                .post(body)
+                .url(appConfig.get(SSOAccountUpdaterParams.lms_host.name()) + appConfig.get(SSOAccountUpdaterParams.user_update_private_api.name()))
+                .patch(body)
                 .addHeader(HttpHeaders.ACCEPT, javax.ws.rs.core.MediaType.APPLICATION_JSON)
                 .addHeader(HttpHeaders.CONTENT_TYPE, javax.ws.rs.core.MediaType.APPLICATION_JSON)
                 .build();
@@ -173,7 +173,11 @@ public class SSOAccountUpdaterService {
         int responseCode = response.code();
         response.close();
 
-        return 200 == responseCode;
+        if (200 == responseCode) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 }
