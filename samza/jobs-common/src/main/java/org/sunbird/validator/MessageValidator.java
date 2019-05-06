@@ -1,7 +1,5 @@
 package org.sunbird.validator;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-
 import java.text.MessageFormat;
 import org.sunbird.models.Message;
 import java.util.Map;
