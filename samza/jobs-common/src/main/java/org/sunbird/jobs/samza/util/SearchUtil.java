@@ -33,8 +33,8 @@ public class SearchUtil {
         String responseJson = response.body().string();
 
         if (200 == responseCode) {
-            Map<String, Object> orgSearchResponse = mapper.readValue(responseJson, Map.class);
-            Map<String, Object> resultMap = (Map<String, Object>) orgSearchResponse.get(CommonParams.result.name());
+            Map<String, Object> searchResponse = mapper.readValue(responseJson, Map.class);
+            Map<String, Object> resultMap = (Map<String, Object>) searchResponse.get(CommonParams.result.name());
             responseMap = (Map<String, Object>) resultMap.get(CommonParams.response.name());
         }
         return responseMap;
