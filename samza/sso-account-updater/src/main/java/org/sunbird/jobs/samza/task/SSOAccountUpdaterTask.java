@@ -36,9 +36,9 @@ public class SSOAccountUpdaterTask implements StreamTask, InitableTask {
         try {
             service.processMessage(message);
         } catch (ProjectCommonException e) {
-            Logger.error("SSOAccountUpdaterTask:process: Error while processing message:", message, e);
+            Logger.error("SSOAccountUpdaterTask:process: Error while processing message", message, e);
         } catch (Exception e) {
-            Logger.error("SSOAccountUpdaterTask:process: Error while processing message:", message, e);
+            Logger.error("SSOAccountUpdaterTask:process: Generic error while processing message", message, e);
             throw e;
         }
     }
