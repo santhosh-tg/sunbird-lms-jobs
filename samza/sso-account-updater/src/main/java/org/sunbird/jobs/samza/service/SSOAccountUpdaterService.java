@@ -16,6 +16,7 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.sunbird.jobs.samza.util.SearchUtil;
 
 import javax.ws.rs.core.HttpHeaders;
 import java.util.ArrayList;
@@ -89,23 +90,9 @@ public class SSOAccountUpdaterService {
         Map<String, Object> orgSearchRequest = new HashMap<>();
         orgSearchRequest.put(SSOAccountUpdaterParams.request.name(), requestMap);
 
-        RequestBody body = RequestBody.create(jsonMediaType, mapper.writeValueAsString(orgSearchRequest));
-        Request request = new Request.Builder()
-                .url(appConfig.get(SSOAccountUpdaterParams.lms_host.name()) + appConfig.get(SSOAccountUpdaterParams.org_search_api.name()))
-                .post(body)
-                .addHeader(HttpHeaders.ACCEPT, javax.ws.rs.core.MediaType.APPLICATION_JSON)
-                .addHeader(HttpHeaders.CONTENT_TYPE, javax.ws.rs.core.MediaType.APPLICATION_JSON)
-                .build();
+        Map<String, Object> responseMap = SearchUtil.search(orgSearchRequest, appConfig.get(SSOAccountUpdaterParams.lms_host.name()) + appConfig.get(SSOAccountUpdaterParams.org_search_api.name()));
 
-        Response response = client.newCall(request).execute();
-
-        int responseCode = response.code();
-        String responseJson = response.body().string();
-
-        if (200 == responseCode) {
-            Map<String, Object> orgSearchResponse = mapper.readValue(responseJson, Map.class);
-            Map<String, Object> resultMap = (Map<String, Object>) orgSearchResponse.get(SSOAccountUpdaterParams.result.name());
-            Map<String, Object> responseMap = (Map<String, Object>) resultMap.get(SSOAccountUpdaterParams.response.name());
+        if (MapUtils.isNotEmpty(responseMap)) {
             Double dCount = (Double) responseMap.get(SSOAccountUpdaterParams.count.name());
             int count = dCount.intValue();
             if (0 != count) {
@@ -114,7 +101,7 @@ public class SSOAccountUpdaterService {
             }
         }
 
-        return new HashMap<>();
+        return new HashMap();
 
     }
 
