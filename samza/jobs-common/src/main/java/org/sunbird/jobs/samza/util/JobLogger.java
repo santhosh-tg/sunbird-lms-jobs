@@ -16,18 +16,21 @@ public class JobLogger {
 	}
 
 	public void debug(String msg, Map<String, Object> event) throws Exception {
-		if (logger.isDebugEnabled())
+		if (logger.isDebugEnabled()) {
 			debug(msg, JSONUtils.serialize(event));
+		}
 	}
 
 	public void info(String msg, Map<String, Object> event) throws Exception {
-		if (logger.isInfoEnabled())
+		if (logger.isInfoEnabled()) {
 			info(msg, JSONUtils.serialize(event));
+		}
 	}
 
 	public void error(String msg, Map<String, Object> event, Throwable t) throws Exception {
-		if (logger.isErrorEnabled())
+		if (logger.isErrorEnabled()) {
 			error(msg, JSONUtils.serialize(event), t);
+		}
 	}
 
 	public void debug(String msg) {
@@ -55,6 +58,6 @@ public class JobLogger {
 	}
 
 	private String getLogMessage(String msg, String event) {
-		return event == null ? MessageFormat.format("Message: {0}", msg) : MessageFormat.format("Message: {0} | event:{1}", msg, event);
+		return event == null ? MessageFormat.format("Message: {0}", msg) : MessageFormat.format("Message: {0} | event: {1}", msg, event);
 	}
 }
