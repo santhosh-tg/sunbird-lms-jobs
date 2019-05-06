@@ -1,12 +1,12 @@
 package org.sunbird.jobs.samza.service;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.samza.config.Config;
 import org.sunbird.common.exception.ProjectCommonException;
-import org.sunbird.common.responsecode.ResponseCode;
+import org.sunbird.jobs.samza.common.ResponseCode;
 import org.sunbird.jobs.samza.util.JobLogger;
 import org.sunbird.jobs.samza.util.JSONUtils;
 import org.sunbird.jobs.samza.util.SSOAccountUpdaterParams;
@@ -29,7 +29,7 @@ public class SSOAccountUpdaterService {
     private JobLogger Logger = new JobLogger(SSOAccountUpdaterService.class);
     private Config appConfig = null;
     private OkHttpClient client = new OkHttpClient();
-    private Gson gson = new Gson();
+    private ObjectMapper mapper = new ObjectMapper();
 
     public void initialize(Config config) throws Exception {
         JSONUtils.loadProperties(config);
@@ -41,71 +41,31 @@ public class SSOAccountUpdaterService {
 
         Map<String, Object> eventMap = (Map<String, Object>) message.get(SSOAccountUpdaterParams.event.name());
 
-        String userExternalId = (String) eventMap.get(SSOAccountUpdaterParams.userExternalId.name());
-        String nameFromPayload = (String) eventMap.get(SSOAccountUpdaterParams.nameFromPayload.name());
+        String userId = (String) eventMap.get(SSOAccountUpdaterParams.userId.name());
         String channel = (String) eventMap.get(SSOAccountUpdaterParams.channel.name());
         String orgExternalId = (String) eventMap.get(SSOAccountUpdaterParams.orgExternalId.name());
-        List<String> passedRoles = (List<String>) eventMap.get(SSOAccountUpdaterParams.roles.name());
-        String userId = (String) eventMap.get(SSOAccountUpdaterParams.userId.name());
-        List<Map<String, Object>> organisations = (List<Map<String, Object>>) eventMap.get(SSOAccountUpdaterParams.organisations.name());
-        String firstName = (String) eventMap.get(SSOAccountUpdaterParams.firstName.name());
 
         Logger.info("SSOAccountUpdaterService:processMessage: Processing user data for userId - " + userId);
 
-        Map<String, Object> passedOrg = getOrg(channel, orgExternalId);
-        if (MapUtils.isEmpty(passedOrg)) {
-            ProjectCommonException.throwClientErrorException(ResponseCode.invalidOrgData);
-        }
+        Map<String, Object> passedOrg = findOrgFromExternalId(channel, orgExternalId);
 
         Map<String, Object> updateMap = new HashMap<>();
-        if (!StringUtils.equals(nameFromPayload, firstName)) {
-            updateMap.put(SSOAccountUpdaterParams.firstName.name(), nameFromPayload);
-        }
-
-        if (CollectionUtils.isEmpty(passedRoles)) {
-            passedRoles = new ArrayList<String>();
-            passedRoles.add(SSOAccountUpdaterParams.PUBLIC.name());
-        }
-
-        String passedOrgId = (String) passedOrg.get(SSOAccountUpdaterParams.identifier.name());
-        if (CollectionUtils.isEmpty(organisations)) {
-            updateMap.put(SSOAccountUpdaterParams.organisations.name(), getOrganisationsListFromPayloadData(passedOrgId, userId, passedRoles));
-        } else {
-            boolean isUserUpdateRequired = true;
-            passedRoles.remove(SSOAccountUpdaterParams.PUBLIC.name());
-
-            for (Map<String, Object> organisation : organisations) {
-                String linkedOrgId = (String) organisation.get(SSOAccountUpdaterParams.organisationId.name());
-                //find linked org
-                if (StringUtils.equalsIgnoreCase(linkedOrgId, passedOrgId)) {
-                    //match roles
-                    List<String> assignedRoles = (List<String>) organisation.get(SSOAccountUpdaterParams.roles.name());
-                    assignedRoles.remove(SSOAccountUpdaterParams.PUBLIC.name());
-                    if (CollectionUtils.isEqualCollection(passedRoles, assignedRoles)) {
-                        isUserUpdateRequired = false;
-                        break;
-                    }
-                }
-            }
-
-            if (isUserUpdateRequired) {
-                updateMap.put(SSOAccountUpdaterParams.organisations.name(), getOrganisationsListFromPayloadData(passedOrgId, userId, passedRoles));
-            }
-        }
+        validateName(eventMap, updateMap);
+        validateSchool(eventMap, updateMap, passedOrg);
 
         if (MapUtils.isNotEmpty(updateMap)) {
             updateMap.put(SSOAccountUpdaterParams.userId.name(), userId);
-
-            Map<String, Object> updateUserRequest = new HashMap<>();
-            updateUserRequest.put(SSOAccountUpdaterParams.request.name(), updateMap);
-
-            updateUser(updateUserRequest);
+            updateUser(updateMap);
             Logger.info("SSOAccountUpdaterService:processMessage: User data updated in the system for userId - " + userId);
         }
 
     }
 
     private List<Map<String, Object>> getOrganisationsListFromPayloadData(String passedOrgId, String userId, List<String> passedRoles) {
+        if (passedRoles.isEmpty()) {
+            passedRoles.add(SSOAccountUpdaterParams.PUBLIC.name());
+        }
+
         Map<String, Object> organisationMap = new HashMap<>();
         organisationMap.put(SSOAccountUpdaterParams.organisationId.name(), passedOrgId);
         organisationMap.put(SSOAccountUpdaterParams.userId.name(), userId);
@@ -129,7 +89,7 @@ public class SSOAccountUpdaterService {
         Map<String, Object> orgSearchRequest = new HashMap<>();
         orgSearchRequest.put(SSOAccountUpdaterParams.request.name(), requestMap);
 
-        RequestBody body = RequestBody.create(jsonMediaType, gson.toJson(orgSearchRequest));
+        RequestBody body = RequestBody.create(jsonMediaType, mapper.writeValueAsString(orgSearchRequest));
         Request request = new Request.Builder()
                 .url(appConfig.get(SSOAccountUpdaterParams.lms_host.name()) + appConfig.get(SSOAccountUpdaterParams.org_search_api.name()))
                 .post(body)
@@ -143,7 +103,7 @@ public class SSOAccountUpdaterService {
         String responseJson = response.body().string();
 
         if (200 == responseCode) {
-            Map<String, Object> orgSearchResponse = gson.fromJson(responseJson, Map.class);
+            Map<String, Object> orgSearchResponse = mapper.readValue(responseJson, Map.class);
             Map<String, Object> resultMap = (Map<String, Object>) orgSearchResponse.get(SSOAccountUpdaterParams.result.name());
             Map<String, Object> responseMap = (Map<String, Object>) resultMap.get(SSOAccountUpdaterParams.response.name());
             Double dCount = (Double) responseMap.get(SSOAccountUpdaterParams.count.name());
@@ -158,9 +118,12 @@ public class SSOAccountUpdaterService {
 
     }
 
-    private boolean updateUser(Map<String, Object> updateUserRequest) throws Exception {
+    public boolean updateUser(Map<String, Object> updateMap) throws Exception {
 
-        RequestBody body = RequestBody.create(jsonMediaType, gson.toJson(updateUserRequest));
+        Map<String, Object> updateUserRequest = new HashMap<>();
+        updateUserRequest.put(SSOAccountUpdaterParams.request.name(), updateMap);
+
+        RequestBody body = RequestBody.create(jsonMediaType, mapper.writeValueAsString(updateUserRequest));
         Request request = new Request.Builder()
                 .url(appConfig.get(SSOAccountUpdaterParams.lms_host.name()) + appConfig.get(SSOAccountUpdaterParams.user_update_private_api.name()))
                 .patch(body)
@@ -179,5 +142,61 @@ public class SSOAccountUpdaterService {
             return false;
         }
 
+    }
+
+    private Map<String, Object> findOrgFromExternalId(String channel, String orgExternalId) throws Exception {
+        Map<String, Object> org = getOrg(channel, orgExternalId);
+        if (MapUtils.isEmpty(org)) {
+            throw new ProjectCommonException(ResponseCode.invalidOrgData.getErrorCode(), ResponseCode.invalidOrgData.getErrorMessage(), ResponseCode.CLIENT_ERROR.getResponseCode());
+        }
+        return org;
+    }
+
+    private void validateName(Map<String, Object> eventMap, Map<String, Object> updateMap) {
+        String nameFromPayload = (String) eventMap.get(SSOAccountUpdaterParams.nameFromPayload.name());
+        String firstName = (String) eventMap.get(SSOAccountUpdaterParams.firstName.name());
+        if (!StringUtils.equals(nameFromPayload, firstName)) {
+            updateMap.put(SSOAccountUpdaterParams.firstName.name(), nameFromPayload);
+        }
+    }
+
+    private void validateSchool(Map<String, Object> eventMap, Map<String, Object> updateMap, Map<String, Object> passedOrg) {
+        List<String> passedRoles = (List<String>) eventMap.get(SSOAccountUpdaterParams.roles.name());
+        String userId = (String) eventMap.get(SSOAccountUpdaterParams.userId.name());
+        List<Map<String, Object>> organisations = (List<Map<String, Object>>) eventMap.get(SSOAccountUpdaterParams.organisations.name());
+
+        //if roles is not passed, assume PUBLIC
+        if (CollectionUtils.isEmpty(passedRoles)) {
+            passedRoles = new ArrayList<String>();
+            passedRoles.add(SSOAccountUpdaterParams.PUBLIC.name());
+        }
+
+        String passedOrgId = (String) passedOrg.get(SSOAccountUpdaterParams.identifier.name());
+        if (CollectionUtils.isEmpty(organisations)) {
+            updateMap.put(SSOAccountUpdaterParams.organisations.name(), getOrganisationsListFromPayloadData(passedOrgId, userId, passedRoles));
+        } else {
+            boolean isUserUpdateRequired = true;
+
+            //ignore PUBLIC role for comparison
+            passedRoles.remove(SSOAccountUpdaterParams.PUBLIC.name());
+
+            for (Map<String, Object> organisation : organisations) {
+                String linkedOrgId = (String) organisation.get(SSOAccountUpdaterParams.organisationId.name());
+                //find linked org
+                if (StringUtils.equalsIgnoreCase(linkedOrgId, passedOrgId)) {
+                    //match roles
+                    List<String> assignedRoles = (List<String>) organisation.get(SSOAccountUpdaterParams.roles.name());
+                    assignedRoles.remove(SSOAccountUpdaterParams.PUBLIC.name());
+                    if (CollectionUtils.isEqualCollection(passedRoles, assignedRoles)) {
+                        isUserUpdateRequired = false;
+                        break;
+                    }
+                }
+            }
+
+            if (isUserUpdateRequired) {
+                updateMap.put(SSOAccountUpdaterParams.organisations.name(), getOrganisationsListFromPayloadData(passedOrgId, userId, passedRoles));
+            }
+        }
     }
 }
