@@ -1,4 +1,4 @@
-package org.sunbird.jobs.indexer.test;
+package org.sunbird.jobs.samza.service;
 
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -19,9 +18,10 @@ import org.sunbird.common.ElasticSearchUtil;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.jobs.samza.service.IndexerService;
 import org.sunbird.models.Constants;
+import org.sunbird.models.Message;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ IndexerService.class, ElasticSearchUtil.class, })
+@PrepareForTest({ ElasticSearchUtil.class, })
 @PowerMockIgnore({ "javax.management.*" })
 public class IndexerServiceTest {
 
@@ -33,23 +33,6 @@ public class IndexerServiceTest {
   @Test
   public void testProcessSuccessForUpsert() {
     Map<String, Object> messageMap = createMessageMap();
-
-    IndexerService service = new IndexerService();
-    ProjectCommonException error = null;
-
-    try {
-      service.process(messageMap);
-    } catch (ProjectCommonException e) {
-      error = e;
-    }
-
-    Assert.assertTrue(error == null);
-  }
-
-  @Test
-  public void testProcessSuccessForDelete() {
-    Map<String, Object> messageMap = createMessageMap();
-    messageMap.put(Constants.OPERATION_TYPE, Constants.DELETE);
 
     IndexerService service = new IndexerService();
     ProjectCommonException error = null;
@@ -84,6 +67,39 @@ public class IndexerServiceTest {
   }
 
   @Test
+  public void testProcessSuccessForOrgUpsert() {
+    Map<String, Object> messageMap = createMessageMapForOrg(createMessageMap());
+
+    IndexerService service = new IndexerService();
+    ProjectCommonException error = null;
+
+    try {
+      service.process(messageMap);
+    } catch (ProjectCommonException e) {
+      error = e;
+    }
+
+    Assert.assertTrue(error == null);
+  }
+
+  @Test
+  public void testProcessSuccessForDelete() {
+    Map<String, Object> messageMap = createMessageMap();
+    messageMap.put(Constants.OPERATION_TYPE, Constants.DELETE);
+
+    IndexerService service = new IndexerService();
+    ProjectCommonException error = null;
+
+    try {
+      service.process(messageMap);
+    } catch (ProjectCommonException e) {
+      error = e;
+    }
+
+    Assert.assertTrue(error == null);
+  }
+
+  @Test
   public void testProcessFailureForDelete() {
     when(ElasticSearchUtil.removeData(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenThrow(throwException());
@@ -107,7 +123,7 @@ public class IndexerServiceTest {
     Map<String, Object> messageMap = new HashMap<>();
     messageMap.put(Constants.IDENTIFIER, "123456");
     messageMap.put(Constants.OPERATION_TYPE, Constants.UPSERT);
-    messageMap.put(Constants.EVENT_TYPE, Constants.TRANSACTIONAL);
+    messageMap.put(Constants.EVENT_TYPE, Message.TRANSACTIONAL);
     messageMap.put(Constants.OBJECT_TYPE, Constants.LOCATION);
 
     Map<String, Object> event = new HashMap<>();
@@ -128,6 +144,21 @@ public class IndexerServiceTest {
     return messageMap;
   }
 
+  private Map<String, Object> createMessageMapForOrg(Map<String, Object> messageMap) {
+    messageMap.put(Constants.OBJECT_TYPE, Constants.ORGANISATION);
+    Map<String, Object> event = new HashMap<>();
+    Map<String, Object> properties = new HashMap<>();
+    Map<String, Object> name = new HashMap<>();
+    Map<String, Object> id = new HashMap<>();
+    name.put(Constants.NV, "BLR-org");
+    id.put(Constants.NV, "0001");
+    properties.put("orgName", name);
+    properties.put("id", id);
+    event.put("properties", properties);
+    messageMap.put(Constants.EVENT, event);
+    return messageMap;
+  }
+  
   private ProjectCommonException throwException() {
     return new ProjectCommonException("", "", 0);
   }

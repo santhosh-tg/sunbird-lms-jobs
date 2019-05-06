@@ -1,4 +1,4 @@
-package org.sunbird.jobs.commom.test;
+package org.sunbird.models;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class MessageCreatorTest {
 
     messageMap.put(Constants.IDENTIFIER, "123456");
     messageMap.put(Constants.OPERATION_TYPE, Constants.UPSERT);
-    messageMap.put(Constants.EVENT_TYPE, Constants.TRANSACTIONAL);
+    messageMap.put(Constants.EVENT_TYPE, Message.TRANSACTIONAL);
     messageMap.put(Constants.OBJECT_TYPE, Constants.LOCATION);
 
     Map<String, Object> event = new HashMap<>();

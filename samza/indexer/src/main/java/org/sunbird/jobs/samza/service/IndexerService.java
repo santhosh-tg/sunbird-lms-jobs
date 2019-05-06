@@ -1,11 +1,15 @@
 package org.sunbird.jobs.samza.service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.sunbird.common.ElasticSearchUtil;
+import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.LoggerEnum;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
@@ -14,6 +18,7 @@ import org.sunbird.models.Message;
 import org.sunbird.models.MessageCreator;
 import org.sunbird.validator.MessageValidator;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigValue;
 
@@ -26,11 +31,13 @@ public class IndexerService {
   private final static String confFile = "indexer.conf";
   private static com.typesafe.config.Config config = null;
   private static Map<String, String> properties = null;
+  private static ObjectMapper mapper = null;
 
   public IndexerService() {
     messageCreator = new MessageCreator();
     messageValidator = new MessageValidator();
     config = ConfigFactory.parseResources(confFile);
+    mapper = new ObjectMapper();
     initProps();
     ProjectLogger.log("IndexerService is intialised", LoggerEnum.INFO);
   }

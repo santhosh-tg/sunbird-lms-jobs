@@ -3,6 +3,8 @@ package org.sunbird.models;
 import java.util.Map;
 
 public class Message {
+  
+  public static final String TRANSACTIONAL = "transactional";
 
   private String objectType;
   private String eventType;
