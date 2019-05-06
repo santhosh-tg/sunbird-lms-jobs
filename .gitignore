@@ -1,7 +1,7 @@
 *.iml
-**/target/**
 .idea/
 .project
-samza/deploy
 .classpath
 .settings
+**/target/**
+samza/deploy

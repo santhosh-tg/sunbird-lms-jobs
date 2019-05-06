@@ -20,6 +20,88 @@
 	<name>Common Utils</name>
 	<dependencies>
 		<dependency>
+			<groupId>org.apache.samza</groupId>
+			<artifactId>samza-api</artifactId>
+			<version>${samza.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.samza</groupId>
+			<artifactId>samza-core_${scala.version}</artifactId>
+			<version>${samza.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.samza</groupId>
+			<artifactId>samza-yarn_${scala.version}</artifactId>
+			<version>${samza.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.samza</groupId>
+			<artifactId>samza-kafka_${scala.version}</artifactId>
+			<version>${samza.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.samza</groupId>
+			<artifactId>samza-log4j</artifactId>
+			<version>${samza.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-yarn-client</artifactId>
+			<version>${hadoop.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-yarn-common</artifactId>
+			<version>${hadoop.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-hdfs</artifactId>
+			<version>${hadoop.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.samza</groupId>
+			<artifactId>samza-shell</artifactId>
+			<classifier>dist</classifier>
+			<type>tgz</type>
+			<version>${samza.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe</groupId>
+			<artifactId>config</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>1.6.5</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>1.6.5</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.sunbird</groupId>
 			<artifactId>common-util</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
@@ -29,6 +111,7 @@
 			<artifactId>elasticsearch-util</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
@@ -48,12 +131,6 @@
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
