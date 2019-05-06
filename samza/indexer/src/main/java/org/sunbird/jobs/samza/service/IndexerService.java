@@ -74,31 +74,8 @@ public class IndexerService {
 
   private Map<String, Object> prepareData(Message message, String type) {
     Map<String, Object> data = null;
-    if (Constants.ORG.equals(type)) {
-      data = prepareOrgData(message.getProperties());
-    } else {
-      data = message.getProperties();
-    }
+    data = message.getProperties();
     return data;
-  }
-
-  @SuppressWarnings("unchecked")
-  private Map<String, Object> prepareOrgData(Map<String, Object> map) {
-    String contactDetails = (String) map.get(JsonKey.CONTACT_DETAILS);
-    if (StringUtils.isNotBlank(contactDetails)) {
-      Object[] arr;
-      try {
-        arr = mapper.readValue(contactDetails, Object[].class);
-        map.put(JsonKey.CONTACT_DETAILS, arr);
-      } catch (IOException e) {
-        map.put(JsonKey.CONTACT_DETAILS, new Object[] {});
-        ProjectLogger.log(e.getMessage(), e);
-      }
-    } else {
-      map.put(JsonKey.CONTACT_DETAILS, new Object[] {});
-    }
-
-    return map;
   }
 
   private String getIndex(String objectType) {

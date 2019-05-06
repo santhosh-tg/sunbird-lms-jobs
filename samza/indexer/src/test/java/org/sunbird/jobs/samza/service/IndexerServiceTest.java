@@ -154,7 +154,6 @@ public class IndexerServiceTest {
     id.put(Constants.NV, "0001");
     properties.put("orgName", name);
     properties.put("id", id);
-    properties.put("contactDetail", null);
     event.put("properties", properties);
     messageMap.put(Constants.EVENT, event);
     return messageMap;
