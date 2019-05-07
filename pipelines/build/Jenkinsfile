@@ -33,7 +33,7 @@ node() {
             stage('Archive artifacts'){
                 sh """
                         mkdir lms_artifacts
-                        cp indexer/target/*-distribution.tar.gz lms_artifacts
+                        cp samza/sso-account-updater/target/*-distribution.tar.gz lms_artifacts
                         zip -j lms_artifacts.zip:${artifact_version} lms_artifacts/*
                     """
                 archiveArtifacts artifacts: "lms_artifacts.zip:${artifact_version}", fingerprint: true, onlyIfSuccessful: true
