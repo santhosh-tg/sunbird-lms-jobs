@@ -37,7 +37,7 @@ node() {
                         zip -j lms_artifacts.zip:${artifact_version} lms_artifacts/*
                     """
                 archiveArtifacts artifacts: "lms_artifacts.zip:${artifact_version}", fingerprint: true, onlyIfSuccessful: true
-                sh """echo {\\"artifact_name\\" : \\"dp_artifacts.zip\\", \\"artifact_version\\" : \\"${artifact_version}\\", \\"node_name\\" : \\"${env.NODE_NAME}\\"} > metadata.json"""
+                sh """echo {\\"artifact_name\\" : \\"lms_artifacts.zip\\", \\"artifact_version\\" : \\"${artifact_version}\\", \\"node_name\\" : \\"${env.NODE_NAME}\\"} > metadata.json"""
                 archiveArtifacts artifacts: 'metadata.json', onlyIfSuccessful: true
                 currentBuild.description = "${artifact_version}"
             }
