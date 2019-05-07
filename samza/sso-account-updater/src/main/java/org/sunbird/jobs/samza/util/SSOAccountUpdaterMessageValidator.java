@@ -9,26 +9,22 @@ import java.util.Map;
 
 public class SSOAccountUpdaterMessageValidator {
 
-    public void validateEvent(Map<String, Object> event) {
-        if (StringUtils.isBlank((String) event.get(SSOAccountUpdaterParams.userExternalId.name()))) {
-            throwMandatoryParamsMissingException(SSOAccountUpdaterParams.userExternalId.name());
-        } else if (StringUtils.isBlank((String) event.get(SSOAccountUpdaterParams.nameFromPayload.name()))) {
-            throwMandatoryParamsMissingException(SSOAccountUpdaterParams.nameFromPayload.name());
-        } else if (StringUtils.isBlank((String) event.get(SSOAccountUpdaterParams.channel.name()))) {
-            throwMandatoryParamsMissingException(SSOAccountUpdaterParams.channel.name());
-        } else if (StringUtils.isBlank((String) event.get(SSOAccountUpdaterParams.orgExternalId.name()))) {
-            throwMandatoryParamsMissingException(SSOAccountUpdaterParams.orgExternalId.name());
-        } else if (StringUtils.isBlank((String) event.get(SSOAccountUpdaterParams.userId.name()))) {
-            throwMandatoryParamsMissingException(SSOAccountUpdaterParams.userId.name());
-        } else if (StringUtils.isBlank((String) event.get(SSOAccountUpdaterParams.firstName.name()))) {
-            throwMandatoryParamsMissingException(SSOAccountUpdaterParams.firstName.name());
+    public void validateMessage(Map<String, Object> message, String[] mandatoryParams) {
+        for (String param : mandatoryParams) {
+            validateField(param, message);
+        }
+    }
+
+    private void validateField(String param, Map<String, Object> message) {
+        if (StringUtils.isBlank((String) message.get(param))) {
+            throwMandatoryParamsMissingException(param);
         }
     }
 
     private void throwMandatoryParamsMissingException(String fieldName) {
         throw new ProjectCommonException(
-            ResponseCode.mandatoryParamsMissing.getErrorCode(),
-            MessageFormat.format(ResponseCode.mandatoryParamsMissing.getErrorMessage(), fieldName),
-            ResponseCode.CLIENT_ERROR.getResponseCode());
+                ResponseCode.mandatoryParamsMissing.getErrorCode(),
+                MessageFormat.format(ResponseCode.mandatoryParamsMissing.getErrorMessage(), fieldName),
+                ResponseCode.CLIENT_ERROR.getResponseCode());
     }
 }

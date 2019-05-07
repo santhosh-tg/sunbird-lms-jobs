@@ -33,18 +33,27 @@ public class SSOAccountUpdaterService {
     private OkHttpClient client = new OkHttpClient();
     private ObjectMapper mapper = new ObjectMapper();
     private SSOAccountUpdaterMessageValidator validator = null;
+    private String[] mandatoryParams = null;
 
     public void initialize(Config config) throws Exception {
         JSONUtils.loadProperties(config);
         appConfig = config;
         validator = new SSOAccountUpdaterMessageValidator();
+        mandatoryParams = new String[]{
+                SSOAccountUpdaterParams.userExternalId.name(),
+                SSOAccountUpdaterParams.nameFromPayload.name(),
+                SSOAccountUpdaterParams.channel.name(),
+                SSOAccountUpdaterParams.orgExternalId.name(),
+                SSOAccountUpdaterParams.userId.name(),
+                SSOAccountUpdaterParams.firstName.name()};
         Logger.info("SSOAccountUpdaterService:initialize: Service config initialized");
     }
 
     public void processMessage(Map<String, Object> message) throws Exception {
 
         Map<String, Object> eventMap = (Map<String, Object>) message.get(SSOAccountUpdaterParams.event.name());
-        validator.validateEvent(eventMap);
+
+        validator.validateMessage(eventMap, mandatoryParams);
 
         String userId = (String) eventMap.get(SSOAccountUpdaterParams.userId.name());
         String channel = (String) eventMap.get(SSOAccountUpdaterParams.channel.name());
