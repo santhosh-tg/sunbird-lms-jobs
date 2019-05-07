@@ -2,8 +2,9 @@
 __yarn_host__: "{{ groups['yarn-master'][0] }}"
 zookeepers: "{{groups['zookeeper']|join(':2181,')}}:2181"
 kafka_brokers: "{{groups['processing-cluster-kafka']|join(':9092,')}}:9092"
-__lms_host__: "{{ groups['swarm-manager'][0] }}:9000"
-
+__lms_host__: "http://{{ groups['swarm-manager'][0] }}:9000"
+lms_es_host: "{{ groups['es'] | join(',') }}"
+lms_es_port: 9300
 
 #artifact download credentials
 artifact_azure_account_name: "{{core_artifact_azure_account_name}}"
