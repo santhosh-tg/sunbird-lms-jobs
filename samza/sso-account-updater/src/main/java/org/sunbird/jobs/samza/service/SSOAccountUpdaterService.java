@@ -106,8 +106,7 @@ public class SSOAccountUpdaterService {
         Map<String, Object> responseMap = SearchUtil.search(orgSearchRequest, appConfig.get(SSOAccountUpdaterParams.lms_host.name()) + appConfig.get(SSOAccountUpdaterParams.org_search_api.name()));
 
         if (MapUtils.isNotEmpty(responseMap)) {
-            Double dCount = (Double) responseMap.get(SSOAccountUpdaterParams.count.name());
-            int count = dCount.intValue();
+            int count = (int) responseMap.get(SSOAccountUpdaterParams.count.name());
             if (0 != count) {
                 List<Map<String, Object>> orgs = (List<Map<String, Object>>) responseMap.get(SSOAccountUpdaterParams.content.name());
                 return orgs.get(0);
