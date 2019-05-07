@@ -41,10 +41,10 @@ node() {
                 stage('deploy artifact'){
                     sh """
                        unzip ${artifact}
-                       mv distribution-*.tar.gz ansible
+                       mv *-distribution.tar.gz ansible
                        rm -rf ansible/roles/samza-jobs/files/jobs
                        mkdir  ansible/roles/samza-jobs/files/jobs
-                       tar -xvf ansible/distribution-*.tar.gz -C ansible/roles/samza-jobs/files/jobs/
+                       tar -xvf ansible/*-distribution.tar.gz -C ansible/roles/samza-jobs/files/jobs/
 
                     """
                     ansiblePlaybook = "${currentWs}/ansible/samza_deploy.yml"
