@@ -30,6 +30,7 @@
         <module>jobs-common</module>
         <module>indexer</module>
         <module>sso-account-updater</module>
+        <module>distribution</module>
     </modules>
 
 </project>
