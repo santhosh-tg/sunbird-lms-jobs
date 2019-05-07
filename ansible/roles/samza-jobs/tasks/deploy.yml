@@ -75,9 +75,6 @@
     - [{key: "__yarn_host__", value: "{{__yarn_host__}}"}, {key: "__yarn_port__", value: "{{__yarn_port__}}"}, {key: "__env__", value: "{{env}}" }, {key: "__zookeepers__", value: "{{zookeepers}}"}, {key: "__kafka_brokers__", value: "{{kafka_brokers}}"}]
     - "{{ (config_files|default({})).results|default([]) }}"
 
-- name: Create directory for additional config
-  file: path={{object_denormalization_additional_config_dir}} owner=hduser group=hadoop recurse=yes state=directory
-
 - name: Update status of new jobs in file
   command: bash -lc "./update_new_job_name.sh {{job_status_file}} {{samza_jobs_dir}}/extract/{{item.item | basename}}"
   args:
