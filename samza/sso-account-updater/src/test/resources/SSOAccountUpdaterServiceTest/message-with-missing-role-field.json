@@ -1,0 +1,19 @@
+{
+  "event": {
+    "userExternalId": "userExternalId",
+    "orgExternalId": "orgExternalId",
+    "channel": "channel",
+    "nameFromPayload": "nameFromPayload",
+    "firstName": "firstName",
+    "userId": "userId",
+    "organisations": [
+      {
+        "organisationId": "organisationId",
+        "userId": "userId",
+        "roles": [
+          "PUBLIC"
+        ]
+      }
+    ]
+  }
+}
