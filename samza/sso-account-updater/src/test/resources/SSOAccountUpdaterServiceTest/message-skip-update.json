@@ -1,0 +1,24 @@
+{
+  "event": {
+    "userExternalId": "userExternalId",
+    "orgExternalId": "orgExternalId",
+    "channel": "channel",
+    "nameFromPayload": "samename",
+    "firstName": "samename",
+    "userId": "userId",
+    "roles": [
+      "CONTENT_CREATOR",
+      "CONTENT_REVIEWER"
+    ],
+    "organisations": [
+      {
+        "organisationId": "0127258902389473282306",
+        "userId": "userId",
+        "roles": [
+          "CONTENT_CREATOR",
+          "CONTENT_REVIEWER"
+        ]
+      }
+    ]
+  }
+}

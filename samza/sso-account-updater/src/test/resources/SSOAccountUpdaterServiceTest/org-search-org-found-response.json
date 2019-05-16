@@ -1,0 +1,64 @@
+{
+  "id": "api.org.search",
+  "ver": "v1",
+  "ts": "2019-05-08 14:56:03:707+0000",
+  "params": {
+    "resmsgid": null,
+    "msgid": "8e27cbf5-e299-43b0-bca7-8347f7e5abcf",
+    "err": null,
+    "status": "success",
+    "errmsg": null
+  },
+  "responseCode": "OK",
+  "result": {
+    "response": {
+      "count": 1,
+      "content": [
+        {
+          "dateTime": null,
+          "preferredLanguage": null,
+          "approvedBy": null,
+          "channel": "apekx",
+          "description": null,
+          "updatedDate": null,
+          "addressId": null,
+          "orgType": null,
+          "provider": "apekx",
+          "locationId": null,
+          "orgCode": null,
+          "theme": null,
+          "id": "0127258902389473282306",
+          "communityId": null,
+          "isApproved": null,
+          "email": null,
+          "slug": "apekx",
+          "identifier": "0127258902389473282306",
+          "thumbnail": null,
+          "orgName": "ZPHS (O), KALIPATNAM",
+          "updatedBy": null,
+          "address": {},
+          "locationIds": [
+            "fc1cd8b0-3b7a-41f9-84f0-37fa880d9c31",
+            "0393395d-ea39-49e0-8324-313b4df4a550",
+            "d3a66694-7961-4f2a-9c9a-e688ead7f5aa"
+          ],
+          "externalId": "28154600415",
+          "isRootOrg": false,
+          "rootOrgId": "0123207707019919361056",
+          "approvedDate": null,
+          "imgUrl": null,
+          "homeUrl": null,
+          "orgTypeId": null,
+          "isDefault": null,
+          "contactDetail": [],
+          "createdDate": "2019-03-24 18:44:47:707+0000",
+          "createdBy": null,
+          "parentOrgId": null,
+          "hashTagId": "0127258902389473282306",
+          "noOfMembers": null,
+          "status": 1
+        }
+      ]
+    }
+  }
+}

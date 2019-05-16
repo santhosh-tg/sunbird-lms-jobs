@@ -12,6 +12,7 @@ import org.sunbird.jobs.samza.util.JSONUtils;
 import org.sunbird.jobs.samza.util.SSOAccountUpdaterParams;
 import org.sunbird.jobs.samza.util.SearchUtil;
 import org.sunbird.jobs.samza.util.SSOAccountUpdaterMessageValidator;
+import org.sunbird.jobs.samza.util.UserUtil;
 
 import okhttp3.OkHttpClient;
 import okhttp3.MediaType;
@@ -117,29 +118,14 @@ public class SSOAccountUpdaterService {
 
     }
 
-    public boolean updateUser(Map<String, Object> updateMap) throws Exception {
+    private boolean updateUser(Map<String, Object> updateMap) throws Exception {
 
         Map<String, Object> updateUserRequest = new HashMap<>();
         updateUserRequest.put(SSOAccountUpdaterParams.request.name(), updateMap);
 
-        RequestBody body = RequestBody.create(jsonMediaType, mapper.writeValueAsString(updateUserRequest));
-        Request request = new Request.Builder()
-                .url(appConfig.get(SSOAccountUpdaterParams.lms_host.name()) + appConfig.get(SSOAccountUpdaterParams.user_update_private_api.name()))
-                .patch(body)
-                .addHeader(HttpHeaders.ACCEPT, javax.ws.rs.core.MediaType.APPLICATION_JSON)
-                .addHeader(HttpHeaders.CONTENT_TYPE, javax.ws.rs.core.MediaType.APPLICATION_JSON)
-                .build();
+        String url = appConfig.get(SSOAccountUpdaterParams.lms_host.name()) + appConfig.get(SSOAccountUpdaterParams.user_update_private_api.name());
 
-        Response response = client.newCall(request).execute();
-
-        int responseCode = response.code();
-        response.close();
-
-        if (200 == responseCode) {
-            return true;
-        } else {
-            return false;
-        }
+        return UserUtil.updateUser(updateUserRequest, url);
 
     }
 
