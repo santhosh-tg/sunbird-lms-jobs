@@ -174,18 +174,18 @@ public class SSOAccountUpdaterService {
 
             for (Map<String, Object> organisation : organisations) {
                 List<String> assignedRoles = (List<String>) organisation.get(SSOAccountUpdaterParams.roles.name());
-                if(CollectionUtils.isNotEmpty(assignedRoles)) {
+                if (CollectionUtils.isNotEmpty(assignedRoles)) {
                     existingRoles.addAll(assignedRoles);
                 }
 
                 String linkedOrgId = (String) organisation.get(SSOAccountUpdaterParams.organisationId.name());
                 //find linked org
                 if (StringUtils.equalsIgnoreCase(linkedOrgId, passedOrgId)) {
-                        isUserUpdateRequired = false;
+                    isUserUpdateRequired = false;
                 }
             }
 
-            if(existingRoles.isEmpty()) {
+            if (existingRoles.isEmpty()) {
                 existingRoles.addAll(getPublicRole());
             }
 
