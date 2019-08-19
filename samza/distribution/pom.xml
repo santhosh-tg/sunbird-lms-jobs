@@ -23,6 +23,13 @@
 			<type>tar.gz</type>
 			<classifier>distribution</classifier>
 		</dependency>
+        <dependency>
+            <groupId>org.sunbird.lms.jobs.samza</groupId>
+            <artifactId>user-account-merger</artifactId>
+            <version>0.0.1</version>
+            <type>tar.gz</type>
+            <classifier>distribution</classifier>
+        </dependency>
 	</dependencies>
     <build>
         <plugins>
