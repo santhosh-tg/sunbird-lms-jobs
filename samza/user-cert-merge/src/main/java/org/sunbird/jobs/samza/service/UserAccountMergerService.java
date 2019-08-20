@@ -68,7 +68,7 @@ public class UserAccountMergerService {
 
         Map<String, Object> mergeUserCert = new HashMap<>();
         mergeUserCert.put(UserAccountMergerParams.request.name(), updateMap);
-        String url = appConfig.get(UserAccountMergerParams.learner_host.name()) + appConfig.get(UserAccountMergerParams.user_cert_merge_private_api.name());
+        String url = appConfig.get(UserAccountMergerParams.lms_host.name()) + appConfig.get(UserAccountMergerParams.user_cert_merge_private_api.name());
         return UserCertUtil.mergeUserCert(mergeUserCert, url);
 
     }
