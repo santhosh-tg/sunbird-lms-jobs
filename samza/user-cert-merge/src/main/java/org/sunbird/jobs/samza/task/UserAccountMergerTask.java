@@ -40,7 +40,6 @@ public class UserAccountMergerTask implements StreamTask, InitableTask {
             Logger.error("UserAccountMergerTask:process: Error while processing message", message, e);
         } catch (Exception e) {
             Logger.error("UserAccountMergerTask:process: Generic error while processing message", message, e);
-            throw e;
         }
     }
 
