@@ -1,5 +1,6 @@
 package org.sunbird.jobs.samza.service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.samza.config.Config;
 import org.sunbird.common.models.util.JsonKey;
@@ -17,7 +18,7 @@ public class UserAccountMergerService {
     private Config appConfig = null;
     private UserAccountMergerMessageValidator validator = null;
     private String[] mandatoryParams = null;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
 
     public void initialize(Config config) throws Exception {
         JSONUtils.loadProperties(config);
