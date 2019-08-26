@@ -32,29 +32,26 @@ public class UserAccountMergerService {
 
     public void processMessage(Map<String, Object> message) throws Exception {
 
-        Map<String, Object> userMergeEvent = null;
+        Map<String, Object> mergeCertMap = null;
         Telemetry telemetryMessage = objectMapper.convertValue(message, Telemetry.class);
         Target target = telemetryMessage.getObject();
         String id = target.getId();
         String type = target.getType();
         Map<String, Object> edataMap= telemetryMessage.getEdata();
-        String mergeeId = (String) edataMap.get("fromAccountId");
-        String mergerId = (String) edataMap.get("toAccountId");
+        String mergeeId = (String) edataMap.get(UserAccountMergerParams.fromAccountId.name());
+        String mergerId = (String) edataMap.get(UserAccountMergerParams.toAccountId.name());
+        String mergerRootOrgId = (String) edataMap.get(JsonKey.ROOT_ORG_ID);
         String action = (String) edataMap.get("action");
-        userMergeEvent = new HashMap<>();
-        userMergeEvent.put(UserAccountMergerParams.fromAccountId.name(),mergeeId);
-        userMergeEvent.put(UserAccountMergerParams.toAccountId.name(),mergeeId);
-
-        validator.validateMessage(userMergeEvent, mandatoryParams);
+        mergeCertMap = new HashMap<>();
+        mergeCertMap.put(UserAccountMergerParams.fromAccountId.name(),mergeeId);
+        mergeCertMap.put(UserAccountMergerParams.toAccountId.name(),mergerId);
+        mergeCertMap.put(JsonKey.ROOT_ORG_ID, mergerRootOrgId);
+        validator.validateMessage(mergeCertMap, mandatoryParams);
         String hashValue = OneWayHashing.encryptVal(mergeeId+"_"+mergerId);
         if(!hashValue.equals(id)) {
             Logger.info("UserAccountMergerService:processMessage: hashValue is not matching - " + mergeeId);
         } else {
             Logger.info("UserAccountMergerService:processMessage: merging user-cert data for mergeeId:: " + mergeeId + " mergerId::" +mergerId);
-
-            Map<String, Object> mergeCertMap = new HashMap<>();
-            mergeCertMap.put(UserAccountMergerParams.fromAccountId.name(),mergeeId);
-            mergeCertMap.put(UserAccountMergerParams.toAccountId.name(),mergerId);
             boolean isMerged = userCertMerge(mergeCertMap);
             if(isMerged) {
                 Logger.info("UserAccountMergerService:processMessage: User cert data merged in the system with userId - " + mergerId);
