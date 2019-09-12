@@ -22,6 +22,11 @@
             <artifactId>jobs-common</artifactId>
             <version>0.0.1</version>
         </dependency>
+        <dependency>
+        <groupId>org.sunbird</groupId>
+	    <artifactId>notification-sdk</artifactId>
+	    <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,6 +1,7 @@
 package org.sunbird.jobs.samza.task;
 
 import java.util.HashMap;
+
 import java.util.Map;
 
 import org.apache.samza.config.Config;
@@ -15,6 +16,11 @@ import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.jobs.samza.service.NotificationService;
 import org.sunbird.jobs.samza.util.JobLogger;
 
+/**
+ * 
+ * @author manzarul
+ *
+ */
 public class NotificationJob implements StreamTask, InitableTask {
 
     private static NotificationService service = new NotificationService();
@@ -24,9 +30,9 @@ public class NotificationJob implements StreamTask, InitableTask {
     public void init(Config config, TaskContext context) throws Exception {
         try {
             service.initialize(config);
-            Logger.info("UserAccountMergerTask:init: Task initialized");
+            Logger.info("NotificationJob:init: Task initialized");
         } catch (Exception e) {
-            Logger.error("UserAccountMergerTask:init: Task initialization failed", e);
+            Logger.error("NotificationJob:init: Task initialization failed", e);
             throw e;
         }
     }
@@ -37,9 +43,9 @@ public class NotificationJob implements StreamTask, InitableTask {
         try {
             service.processMessage(message);
         } catch (ProjectCommonException e) {
-            Logger.error("UserAccountMergerTask:process: Error while processing message", message, e);
+            Logger.error("NotificationJob:process: Error while processing message", message, e);
         } catch (Exception e) {
-            Logger.error("UserAccountMergerTask:process: Generic error while processing message", message, e);
+            Logger.error("NotificationJob:process: Generic error while processing message", message, e);
         }
     }
 
@@ -48,7 +54,7 @@ public class NotificationJob implements StreamTask, InitableTask {
         try {
             return (Map<String, Object>) envelope.getMessage();
         } catch (Exception e) {
-            Logger.error("UserAccountMergerTask:getMessage: Invalid message = " + envelope.getMessage(), e);
+            Logger.error("NotificationJob:getMessage: Invalid message = " + envelope.getMessage(), e);
             return new HashMap();
         }
     }
