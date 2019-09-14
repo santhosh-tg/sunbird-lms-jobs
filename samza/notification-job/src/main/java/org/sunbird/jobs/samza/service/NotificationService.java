@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.samza.config.Config;
+import org.sunbird.cloud.storage.conf.AppConf;
 import org.sunbird.common.models.util.datasecurity.OneWayHashing;
 import org.sunbird.jobs.samza.util.JSONUtils;
 import org.sunbird.jobs.samza.util.JobLogger;
@@ -26,7 +27,9 @@ public class NotificationService {
 	ObjectMapper mapper = new ObjectMapper();
 	private JobLogger Logger = new JobLogger(NotificationService.class);
 	private Config appConfig = null;
-
+	private IFCMNotificationService service = NotificationFactory
+			.getInstance(NotificationFactory.instanceType.httpClinet.name());
+	private static final String FCM_ACCOUNT_KEY = "fcm_account_key";
 	public void initialize(Config config) throws Exception {
 		JSONUtils.loadProperties(config);
 		appConfig = config;
@@ -34,6 +37,9 @@ public class NotificationService {
 	}
 
 	public void processMessage(Map<String, Object> message) throws Exception {
+		String accountKey = appConfig.get(FCM_ACCOUNT_KEY);
+		//TODO uncomment this line
+		//service.setAccountKey(accountKey);
 		Map<String, String> notificationMap = new HashMap<String, String>();
 		Map<String, Object> edataMap = (Map<String, Object>) message.get(Constant.EDATA);
 		String requestHash = "";
@@ -71,9 +77,6 @@ public class NotificationService {
 		}
 
 	}
-
-	private IFCMNotificationService service = NotificationFactory
-			.getInstance(NotificationFactory.instanceType.httpClinet.name());
 
 	private boolean notify(Map<String, String> notificationMap, List<String> deviceIds, String topic) throws Exception {
 		if (deviceIds != null && deviceIds.size() > 0) {
