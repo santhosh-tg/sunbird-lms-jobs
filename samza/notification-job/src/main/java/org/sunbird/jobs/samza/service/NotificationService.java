@@ -12,6 +12,7 @@ import org.sunbird.jobs.samza.util.JSONUtils;
 import org.sunbird.jobs.samza.util.JobLogger;
 import org.sunbird.notification.fcm.provider.IFCMNotificationService;
 import org.sunbird.notification.fcm.provider.NotificationFactory;
+import org.sunbird.notification.fcm.providerImpl.FCMHttpNotificationServiceImpl;
 import org.sunbird.notification.utils.FCMResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,8 +39,7 @@ public class NotificationService {
 
 	public void processMessage(Map<String, Object> message) throws Exception {
 		String accountKey = appConfig.get(FCM_ACCOUNT_KEY);
-		//TODO uncomment this line
-		//service.setAccountKey(accountKey);
+		FCMHttpNotificationServiceImpl.setAccountKey(accountKey);
 		Map<String, String> notificationMap = new HashMap<String, String>();
 		Map<String, Object> edataMap = (Map<String, Object>) message.get(Constant.EDATA);
 		String requestHash = "";
