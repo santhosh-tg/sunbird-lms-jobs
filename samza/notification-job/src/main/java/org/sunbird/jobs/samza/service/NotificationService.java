@@ -38,6 +38,7 @@ public class NotificationService {
 
 	public void processMessage(Map<String, Object> message) throws Exception {
 		String accountKey = appConfig.get(FCM_ACCOUNT_KEY);
+		Logger.info("Account key:"+ accountKey);
 		FCMHttpNotificationServiceImpl.setAccountKey(accountKey);
 		Map<String, String> notificationMap = new HashMap<String, String>();
 		Map<String, Object> edataMap = (Map<String, Object>) message.get(Constant.EDATA);
@@ -102,9 +103,14 @@ public class NotificationService {
 
 	private boolean batchNotify(List<String> deviceIds, Map<String, String> notificationMap) {
 		FCMResponse response = service.sendMultiDeviceNotification(deviceIds, notificationMap, false);
-		Logger.info("Send device notiifcation response with canonicalId,ErrorMsg,successCount,FailureCount"
-				+ response.getCanonical_ids() + "," + response.getError() + ", " + response.getSuccess() + " "
-				+ response.getFailure());
+		if(response != null) {
+			Logger.info("Send device notiifcation response with canonicalId,ErrorMsg,successCount,FailureCount"
+							+ response.getCanonical_ids() + "," + response.getError() + ", " + response.getSuccess() + " "
+							+ response.getFailure());
+		} else {
+			Logger.info("response is improper from fcm:"+response);
+		}
+
 
 		return true;
 	}
