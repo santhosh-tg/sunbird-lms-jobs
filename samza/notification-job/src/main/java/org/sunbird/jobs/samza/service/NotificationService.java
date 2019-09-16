@@ -103,16 +103,15 @@ public class NotificationService {
 
 	private boolean batchNotify(List<String> deviceIds, Map<String, String> notificationMap) {
 		FCMResponse response = service.sendMultiDeviceNotification(deviceIds, notificationMap, false);
-		if(response != null) {
+		if (response != null) {
 			Logger.info("Send device notiifcation response with canonicalId,ErrorMsg,successCount,FailureCount"
-							+ response.getCanonical_ids() + "," + response.getError() + ", " + response.getSuccess() + " "
-							+ response.getFailure());
+					+ response.getCanonical_ids() + "," + response.getError() + ", " + response.getSuccess() + " "
+					+ response.getFailure());
+			return true;
 		} else {
-			Logger.info("response is improper from fcm:"+response);
+			Logger.info("response is improper from fcm:" + response);
+			return false;
 		}
-
-
-		return true;
 	}
 
 }
