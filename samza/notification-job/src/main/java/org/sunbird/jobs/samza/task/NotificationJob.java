@@ -24,7 +24,7 @@ import org.sunbird.jobs.samza.util.JobLogger;
 public class NotificationJob implements StreamTask, InitableTask {
 
     private static NotificationService service = new NotificationService();
-    private JobLogger Logger = new JobLogger(NotificationService.class);
+    private JobLogger Logger = new JobLogger(NotificationJob.class);
 
     @Override
     public void init(Config config, TaskContext context) throws Exception {
