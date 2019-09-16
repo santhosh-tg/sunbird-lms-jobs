@@ -15,7 +15,7 @@ public class Constant {
 	public static final String REQUEST = "request";
 	public static final String NOTIFICATION = "notification";
     public static final String MODE = "mode";
-    public static final String DELICERY_TYPE = "deliveryType";
+    public static final String DELIVERY_TYPE = "deliveryType";
     public static final String CONFIG = "config";
     public static final String IDS = "ids";
     public static final String OBJECT = "object";
