@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.samza.config.Config;
-import org.sunbird.cloud.storage.conf.AppConf;
 import org.sunbird.common.models.util.datasecurity.OneWayHashing;
 import org.sunbird.jobs.samza.util.JSONUtils;
 import org.sunbird.jobs.samza.util.JobLogger;
@@ -71,14 +70,15 @@ public class NotificationService {
 			Logger.info("NotificationService:processMessage: calling send notification ");
 			boolean isSuccess = notify(notificationMap, deviceIds, topic);
 			if (isSuccess) {
-
+            Logger.info("Notification sent to device successfully.");
 			} else {
+			Logger.info("Notification sent failure for device or token " + deviceIds + " _" + topic); 	
 			}
 		}
 
 	}
 
-	private boolean notify(Map<String, String> notificationMap, List<String> deviceIds, String topic) throws Exception {
+	private boolean notify(Map<String, String> notificationMap, List<String> deviceIds, String topic) {
 		if (deviceIds != null && deviceIds.size() > 0) {
 			if (deviceIds.size() <= 100) {
 				return batchNotify(deviceIds, notificationMap);
