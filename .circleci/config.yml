@@ -8,7 +8,7 @@ jobs:
       - run: git submodule update --init --recursive --remote
       - restore_cache:
           key: lms-dependency-cache-{{ checksum "pom.xml" }}
-      - run: mvn clean install
+      - run: mvn clean package -Dmaven.test.skip=true
       - save_cache:
           key: lms-dependency-cache-{{ checksum "pom.xml" }}
           paths: ~/.m2
