@@ -11,10 +11,10 @@
     </parent>
 
     <groupId>org.sunbird.lms.jobs.samza</groupId>
-    <artifactId>sso-account-updater</artifactId>
-    <version>0.0.2</version>
+    <artifactId>user-account-merger</artifactId>
+    <version>0.0.4</version>
     <packaging>jar</packaging>
-    <name>SSO Account Updater</name>
+    <name>User Account Merger</name>
 
     <dependencies>
         <dependency>

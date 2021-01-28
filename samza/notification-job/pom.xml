@@ -11,16 +11,21 @@
     </parent>
 
     <groupId>org.sunbird.lms.jobs.samza</groupId>
-    <artifactId>sso-account-updater</artifactId>
-    <version>0.0.2</version>
+    <artifactId>notification-job</artifactId>
+    <version>0.0.1</version>
     <packaging>jar</packaging>
-    <name>SSO Account Updater</name>
+    <name>User Notification</name>
 
     <dependencies>
         <dependency>
             <groupId>org.sunbird.lms.jobs</groupId>
             <artifactId>jobs-common</artifactId>
             <version>0.0.1</version>
+        </dependency>
+        <dependency>
+        <groupId>org.sunbird</groupId>
+	    <artifactId>notification-sdk</artifactId>
+	    <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

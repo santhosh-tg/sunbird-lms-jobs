@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 public class SSOAccountUpdaterService {
 
@@ -146,42 +148,42 @@ public class SSOAccountUpdaterService {
     }
 
     private void validateSchool(Map<String, Object> eventMap, Map<String, Object> updateMap, Map<String, Object> passedOrg) {
-        List<String> passedRoles = (List<String>) eventMap.get(SSOAccountUpdaterParams.roles.name());
         String userId = (String) eventMap.get(SSOAccountUpdaterParams.userId.name());
         List<Map<String, Object>> organisations = (List<Map<String, Object>>) eventMap.get(SSOAccountUpdaterParams.organisations.name());
 
-        //if roles is not passed, assume PUBLIC
-        if (CollectionUtils.isEmpty(passedRoles)) {
-            passedRoles = new ArrayList<String>();
-            passedRoles.add(SSOAccountUpdaterParams.PUBLIC.name());
-        }
-
         String passedOrgId = (String) passedOrg.get(SSOAccountUpdaterParams.identifier.name());
         if (CollectionUtils.isEmpty(organisations)) {
-            updateMap.put(SSOAccountUpdaterParams.organisations.name(), getOrganisationsListFromPayloadData(passedOrgId, userId, passedRoles));
+            updateMap.put(SSOAccountUpdaterParams.organisations.name(), getOrganisationsListFromPayloadData(passedOrgId, userId, getPublicRole()));
         } else {
             boolean isUserUpdateRequired = true;
-
-            //ignore PUBLIC role for comparison
-            passedRoles.remove(SSOAccountUpdaterParams.PUBLIC.name());
+            Set<String> existingRoles = new HashSet<String>();
 
             for (Map<String, Object> organisation : organisations) {
+                List<String> assignedRoles = (List<String>) organisation.get(SSOAccountUpdaterParams.roles.name());
+                if (CollectionUtils.isNotEmpty(assignedRoles)) {
+                    existingRoles.addAll(assignedRoles);
+                }
+
                 String linkedOrgId = (String) organisation.get(SSOAccountUpdaterParams.organisationId.name());
                 //find linked org
                 if (StringUtils.equalsIgnoreCase(linkedOrgId, passedOrgId)) {
-                    //match roles
-                    List<String> assignedRoles = (List<String>) organisation.get(SSOAccountUpdaterParams.roles.name());
-                    assignedRoles.remove(SSOAccountUpdaterParams.PUBLIC.name());
-                    if (CollectionUtils.isEqualCollection(passedRoles, assignedRoles)) {
-                        isUserUpdateRequired = false;
-                        break;
-                    }
+                    isUserUpdateRequired = false;
                 }
             }
 
+            if (existingRoles.isEmpty()) {
+                existingRoles.addAll(getPublicRole());
+            }
+
             if (isUserUpdateRequired) {
-                updateMap.put(SSOAccountUpdaterParams.organisations.name(), getOrganisationsListFromPayloadData(passedOrgId, userId, passedRoles));
+                updateMap.put(SSOAccountUpdaterParams.organisations.name(), getOrganisationsListFromPayloadData(passedOrgId, userId, new ArrayList<String>(existingRoles)));
             }
         }
+    }
+
+    private List<String> getPublicRole() {
+        List<String> publicRole = new ArrayList<String>();
+        publicRole.add(SSOAccountUpdaterParams.PUBLIC.name());
+        return publicRole;
     }
 }
