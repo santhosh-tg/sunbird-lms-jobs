@@ -13,6 +13,17 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
+	<repositories>
+		<repository>
+			<id>ICM</id>
+			<name>ICM Repository</name>
+			<url>http://maven.icm.edu.pl/artifactory/repo/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+    </repositories>
+
 	<groupId>org.sunbird.lms.jobs</groupId>
 	<artifactId>jobs-common</artifactId>
 	<version>0.0.1</version>
@@ -79,7 +90,7 @@
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
-			<version>1.6.5</version>
+			<version>2.0.2</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -90,26 +101,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito</artifactId>
-			<version>1.6.5</version>
+			<artifactId>powermock-api-mockito2</artifactId>
+			<version>2.0.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
+				<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.sunbird</groupId>
-			<artifactId>common-util</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sunbird</groupId>
-			<artifactId>sunbird-es-utils</artifactId>
-			<version>1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -139,16 +139,17 @@
 		</dependency>
 	</dependencies>
 
+
+
 	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.3.2</version>
+					<version>3.8.0</version>
 					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
+						<release>${maven.compiler.release}</release>
 					</configuration>
 				</plugin>
 
@@ -165,7 +166,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.5.201505241946</version>
+				<version>0.8.5</version>
 				<configuration>
 					<destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
 					<dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
