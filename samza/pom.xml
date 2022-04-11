@@ -24,6 +24,13 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Sunbird Platform Samza Jobs</name>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common</artifactId>
+        <version>3.2.0</version>
+     </dependency>
+    </dependencies>
     <description>This project contains all the backend jobs of Sunbird Platform.</description>
 
     <modules>
